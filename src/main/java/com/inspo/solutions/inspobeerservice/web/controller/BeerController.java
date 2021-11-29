@@ -2,11 +2,12 @@ package com.inspo.solutions.inspobeerservice.web.controller;
 
 import com.inspo.solutions.inspobeerservice.web.model.BeerDto;
 import com.inspo.solutions.inspobeerservice.services.BeerService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RequestMapping("/api/v1/")
@@ -34,7 +35,7 @@ public class BeerController {
     }
 
     @PostMapping("beer")
-    public ResponseEntity saveNewBeer(@RequestBody BeerDto beerDto) {
+    public ResponseEntity saveNewBeer(@RequestBody @Validated BeerDto beerDto) {
         return new ResponseEntity<>(beerService.saveNewBeer(beerDto), HttpStatus.CREATED);
     }
 
