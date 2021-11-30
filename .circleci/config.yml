@@ -43,4 +43,4 @@ jobs:
             - ~/.gradle/caches
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       # run tests!
-      - run: sudo chmod +x ./gradlew test
+      - run: ./gradlew test
