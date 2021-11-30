@@ -11,6 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +43,12 @@ class BeerControllerTest {
 
     @Test
     void saveNewBeer() throws Exception {
-        BeerDto beerDto = BeerDto.builder().beerName("Corona").id(UUID.randomUUID()).beerStyle(BeerStyleEnum.ALE).build();
+        BeerDto beerDto = BeerDto.builder()
+                .beerName("Corona")
+                .id(null)
+                .upc("upc")
+                .price(new BigDecimal("12.3"))
+                .beerStyle(BeerStyleEnum.ALE).build();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
         mockMvc.perform(post("/api/v1/beer/")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -51,7 +58,12 @@ class BeerControllerTest {
 
     @Test
     void updateBeerById() throws Exception {
-        BeerDto beerDto = BeerDto.builder().beerName("Corona").id(UUID.randomUUID()).beerStyle(BeerStyleEnum.ALE).build();
+        BeerDto beerDto = BeerDto.builder()
+                .beerName("Corona")
+                .id(null)
+                .upc("upc")
+                .price(new BigDecimal("12.3"))
+                .beerStyle(BeerStyleEnum.ALE).build();
         String beerDtoJson = objectMapper.writeValueAsString(beerDto);
 
         mockMvc.perform(put("/api/v1/beer/" + UUID.randomUUID().toString())
