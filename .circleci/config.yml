@@ -33,7 +33,7 @@ jobs:
           key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run:
           name: Install dependencies
-          command: chmod +x ./gradlew build -x test
+          command: sudo chmod +x ./gradlew build
       - save_cache:
           paths:
             - ~/.gradle/wrapper
