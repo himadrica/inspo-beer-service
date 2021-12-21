@@ -9,6 +9,7 @@ import com.inspo.solutions.inspobeerservice.web.model.BeerDto;
 import com.inspo.solutions.inspobeerservice.web.model.BeerPagedList;
 import com.inspo.solutions.inspobeerservice.web.model.BeerStyleEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,16 +25,18 @@ public class BeerServiceImpl implements BeerService {
     private final BeerMapper beerMapper;
 
     @Override
+    @Cacheable(cacheNames = "beerListCache", condition = "#showInventoryOnHand == false ")
     public BeerPagedList listBeers(String beerName, BeerStyleEnum beerStyle, PageRequest pageRequest, Boolean showInventoryOnHand) {
+        System.out.println("Not cache");
         BeerPagedList beerPagedList;
         Page<Beer> beerPage;
-        if (!StringUtil.isEmpty(beerName) && !StringUtil.isEmpty(beerStyle.toString())) {
+        if (!StringUtil.isEmpty(beerName) && beerStyle != null && !StringUtil.isEmpty(beerStyle.toString())) {
             //search both
             beerPage = beerRepository.findAllByBeerNameAndBeerStyle(beerName, beerStyle, pageRequest);
-        } else if (!StringUtil.isEmpty(beerName) && StringUtil.isEmpty(beerStyle.toString())) {
+        } else if (!StringUtil.isEmpty(beerName) && beerStyle != null && StringUtil.isEmpty(beerStyle.toString())) {
             //search beer_service name
             beerPage = beerRepository.findAllByBeerName(beerName, pageRequest);
-        } else if (StringUtil.isEmpty(beerName) && !StringUtil.isEmpty(beerStyle.toString())) {
+        } else if (StringUtil.isEmpty(beerName) && beerStyle != null && !StringUtil.isEmpty(beerStyle.toString())) {
             //search beer_service style
             beerPage = beerRepository.findAllByBeerStyle(beerStyle, pageRequest);
         } else {
@@ -64,8 +67,11 @@ public class BeerServiceImpl implements BeerService {
 
         return beerPagedList;
     }
+
     @Override
+    @Cacheable(cacheNames = "beerCache", key = "#beerId", condition = "#showInventoryOnHand == false ")
     public BeerDto getById(UUID beerId, Boolean showInventoryOnHand) {
+        System.out.println("No cache called");
         if (showInventoryOnHand) {
             return beerMapper.beerToBeerDtoWithInventory(
                     beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
@@ -95,6 +101,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
+    @Cacheable(cacheNames = "beerUpcCache")
     public BeerDto getByUpc(String upc) {
         return beerMapper.beerToBeerDto(beerRepository.findByUpc(upc));
     }
