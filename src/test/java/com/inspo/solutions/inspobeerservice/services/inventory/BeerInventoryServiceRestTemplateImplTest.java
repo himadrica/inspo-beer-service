@@ -17,7 +17,8 @@ class BeerInventoryServiceRestTemplateImplTest {
 
     @Test
     void getOnhandInventory() {
-        Integer qoh = beerInventoryService.getOnhandInventory(UUID.randomUUID());
-        System.out.println(qoh);
+        //TODO
+        //Integer qoh = beerInventoryService.getOnhandInventory(UUID.randomUUID());
+        //System.out.println(qoh);
     }
 }
